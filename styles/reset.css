@@ -1,0 +1,39 @@
+* {
+  box-sizing: border-box;
+ }
+
+html, 
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  max-width: 480px;
+}
+
+a {
+  text-decoration: none;
+}
+
+header {
+  display: block;
+}
+
+ul {
+  list-style: none;
+}
+
+li:hover,
+li:focus {
+  cursor: pointer;
+}
+
+button {
+  all: unset;
+}
+
+button:focus,
+button:hover {
+  cursor: pointer;
+}

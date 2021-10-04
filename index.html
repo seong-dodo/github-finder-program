@@ -3,9 +3,36 @@
   <head>
     <meta charset="UFT-8" />
     <title>github friend finder program</title>
+    <script src="https://kit.fontawesome.com/9a0b6a4b2b.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/styles/index.css" />
   </head>
   <body>
-    <div id="app">친구 찾기 프로그램</div>
+    <div id="app">
+      <header class="header-text">
+        <h2>GitHub 친구 찾기 프로그램</h2>
+      </header>
+      <main>
+        <form id="search-user-form">
+          <label for="search-user" hidden>
+            사용자 검색
+          </label>
+          <input 
+            type="text" 
+            id="search-user" 
+            placeholder="사용자 검색" 
+            autocomplete="off"
+          />
+          <button 
+            type="button"
+            name="submit"
+            id="search-user-submit-button"
+            class="input-btn"
+          >
+            <i class="fas fa-search fa-2x"></i>
+          </button>
+        </form>
+      </main>
+    </div>
     <script src="main.js"></script>
   </body>
 </html>
