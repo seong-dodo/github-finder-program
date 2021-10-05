@@ -1,4 +1,6 @@
 @import "reset.css";
+@import "searchForm.css";
+@import "apiList.css";
 
 header {
   /* 헤더 레이아웃 */
@@ -12,24 +14,4 @@ header {
   color: #212529;
   font-weight: 900;
   line-height: 1.5;
-}
-
-form {
-  /* input 검색 폼 */
-  position: relative;
-}
-
-input[type=text] {
-  display: block;
-  width: 480px;
-  padding: 15px 20px;
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-.input-btn {
-   /* input 검색 클릭 버튼 */
-  position: absolute;
-  top: 11px;
-  right: 20px;
 }
