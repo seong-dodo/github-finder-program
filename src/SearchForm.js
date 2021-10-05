@@ -28,6 +28,7 @@ function SearchForm() {
 
     const users = await requestApi(keyword);
     ApiList.createUser(users);
+
     e.target.value = '';
   });
 
@@ -41,6 +42,7 @@ function SearchForm() {
 
     const users = await requestApi(keyword);
     ApiList.createUser(users);
+
     $('#search-user').value = '';
   });
 }
