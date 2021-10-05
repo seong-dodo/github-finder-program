@@ -21,7 +21,7 @@ function SearchForm() {
     if (e.key !== 'Enter') {
       return;
     }
-    if (keyword === '') {
+    if (keyword === '' || keyword === undefined) {
       alert('값을 입력해주세요.');
       return;
     }
@@ -35,7 +35,7 @@ function SearchForm() {
   $('#search-user-submit-button').addEventListener('click', async () => {
     const keyword = ('#search-user').value;
 
-    if (keyword === '') {
+    if (keyword === '' || keyword === undefined) {
       alert('값을 입력해주세요.');
       return;
     }

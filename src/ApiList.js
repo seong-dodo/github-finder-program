@@ -1,54 +1,56 @@
 /* eslint-disable class-methods-use-this */
+import store from './store/store';
 import { $ } from './utils/dom';
-
-const store = {
-  setLocalStorage(user) {
-    localStorage.setItem('user', JSON.stringify(user));
-  },
-  getLocalStorage() {
-    return JSON.parse(localStorage.getItem('user'));
-  },
-};
 
 class ApiList {
   constructor() {
     this.initEvent();
   }
 
-  createUser(users) {
-    const template = users.map((user) => {
-      if (store.getLocalStorage() === null) {
-        return ` 
-        <li data-key-id=${user.id} class="api-item">
-        <img class='user-img' src=${user.avatar_url}/>
-        <div class='user-name'>${user.login}</div>
+  createUserTemplate({
+    id, url, login, bookmark,
+  }) {
+    return `
+        <li data-key-id=${id} class="api-item">
+        <img class='user-img' src=${url}/>
+        <div class='user-name'>${login}</div>
         <button class='bookmark-btn' type='button'>
-          <i class="far fa-star fa-2x bookmark-btn"></i>
+          <i class="${bookmark} fa-star fa-2x bookmark-btn"></i>
         </button>
         </li>`;
-      }
-      if (store.getLocalStorage() !== null) {
-        const isLocal = store.getLocalStorage().find((target) => target.login === user.login);
-        if (isLocal || store.getLocalStorage() === null) {
-          return ` 
-          <li data-key-id=${user.id} class="api-item">
-          <img class='user-img' src=${user.avatar_url}/>
-          <div class='user-name'>${user.login}</div>
-          <button class='bookmark-btn' type='button'>
-            <i class="fas fa-star fa-2x bookmark-btn"></i>
-          </button>
-          </li>`;
-        }
+  }
 
+  isEmptyLocalStorage() {
+    return store.getLocalStorage() === null;
+  }
+
+  createUser(users) {
+    const template = users.map((user) => {
+      if (this.isEmptyLocalStorage()) {
+        return this.createUserTemplate({
+          id: user.id,
+          url: user.avatar_url,
+          login: user.login,
+          bookmark: 'far',
+        });
+      }
+      if (!this.isEmptyLocalStorage()) {
+        const isLocal = store.getLocalStorage().find((target) => target.login === user.login);
+        if (isLocal) {
+          return this.createUserTemplate({
+            id: user.id,
+            url: user.avatar_url,
+            login: user.login,
+            bookmark: 'fas',
+          });
+        }
         if (!isLocal) {
-          return ` 
-          <li data-key-id=${user.id} class="api-item">
-          <img class='user-img' src=${user.avatar_url}/>
-          <div class='user-name'>${user.login}</div>
-          <button class='bookmark-btn' type='button'>
-            <i class="far fa-star fa-2x bookmark-btn"></i>
-          </button>
-          </li>`;
+          return this.createUserTemplate({
+            id: user.id,
+            url: user.avatar_url,
+            login: user.login,
+            bookmark: 'far',
+          });
         }
       }
     }).join('');
@@ -76,11 +78,11 @@ class ApiList {
       login: userId,
     };
 
-    if (store.getLocalStorage() === null) {
+    if (this.isEmptyLocalStorage()) {
       store.setLocalStorage([markedUser]);
       return;
     }
-    if (store.getLocalStorage() !== null) {
+    if (!this.isEmptyLocalStorage()) {
       const state = store.getLocalStorage();
       store.setLocalStorage([...state, markedUser]);
     }
@@ -88,30 +90,22 @@ class ApiList {
     this.addMark(e);
   }
 
-  removeLocalList(e) {
-    if (store.getLocalStorage() !== null) {
-      const userId = e.target.closest('li').querySelector('.user-name').innerText;
-      const check = store.getLocalStorage().find((item) => item.login === userId);
-
-      if (check) {
-        const localList = store.getLocalStorage().filter((item) => item.login !== userId);
-        store.setLocalStorage(localList);
-        this.removeMark(e);
-      }
-    }
+  removeLocalList(e, userId) {
+    const localList = store.getLocalStorage().filter((item) => item.login !== userId);
+    store.setLocalStorage(localList);
+    this.removeMark(e);
   }
 
   initEvent() {
     $('#search-api-list').addEventListener('click', (e) => {
       if (e.target.classList.contains('bookmark-btn')) {
-        if (store.getLocalStorage() !== null) {
+        if (!this.isEmptyLocalStorage()) {
           const userId = e.target.closest('li').querySelector('.user-name').innerText;
-          const check = store.getLocalStorage().find((item) => item.login === userId);
+          const hasUserIdInLocalStorage = store.getLocalStorage()
+            .find((item) => item.login === userId);
 
-          if (check) {
-            const localList = store.getLocalStorage().filter((item) => item.login !== userId);
-            store.setLocalStorage(localList);
-            this.removeMark(e);
+          if (hasUserIdInLocalStorage) {
+            this.removeLocalList(e, userId);
             return;
           }
         }
@@ -120,5 +114,6 @@ class ApiList {
     });
   }
 }
+
 const apiList = new ApiList();
 export default apiList;
