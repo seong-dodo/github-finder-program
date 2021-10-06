@@ -36,7 +36,9 @@ class SearchForm {
       if (store.getLocalStorage() === null) {
         alert('즐겨찾기에 등록된 사람이 없습니다.');
       }
-      localList.createUser();
+      if (store.getLocalStorage() !== null) {
+        localList.createFilterUser(keyword);
+      }
     }
     this.clearInputValue();
   }
