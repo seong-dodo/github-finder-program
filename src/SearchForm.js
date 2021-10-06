@@ -10,6 +10,11 @@ import apiList from './ApiList';
 import localList from './LocalList';
 import store from './store/store';
 
+const TabType = {
+  GITHUB: '깃허브',
+  FAVORITE: '즐겨찾기',
+};
+
 class SearchForm {
   constructor(keyword) {
     this.initEvent();
@@ -30,11 +35,11 @@ class SearchForm {
       return;
     }
 
-    if (navTab.selectedTabType === '깃허브') {
+    if (navTab.selectedTabType === TabType.GITHUB) {
       const users = await this.requestApi(keyword);
       apiList.createUser(users);
     }
-    if (navTab.selectedTabType === '즐겨찾기') {
+    if (navTab.selectedTabType === TabType.FAVORITE) {
       if (store.getLocalStorage() === null || store.getLocalStorage().length === 0) {
         alert('즐겨찾기에 등록된 사람이 없습니다.');
       }

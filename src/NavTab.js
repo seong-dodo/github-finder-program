@@ -12,6 +12,17 @@ class NavTab {
     this.selectedTabType = selectedTabType;
   }
 
+  changeTabType(e) {
+    const targetTab = e.target;
+    const selectedTabType = e.target.innerText;
+    this.selectedTabType = selectedTabType;
+
+    this.clearActive();
+    this.setActive(targetTab);
+    searchForm.clearInputValue();
+    this.render(selectedTabType);
+  }
+
   clearActive() {
     const tabButtons = document.querySelectorAll('.tabs');
     tabButtons.forEach((tabButton) => {
@@ -39,14 +50,7 @@ class NavTab {
   initEvent() {
     $('#tab-view').addEventListener('click', (e) => {
       if (e.target.classList.contains('tabs')) {
-        const targetTab = e.target;
-        const selectedTabType = e.target.innerText;
-        this.selectedTabType = selectedTabType;
-
-        this.clearActive();
-        this.setActive(targetTab);
-        searchForm.clearInputValue();
-        this.render(selectedTabType);
+        this.changeTabType(e);
       }
     });
   }

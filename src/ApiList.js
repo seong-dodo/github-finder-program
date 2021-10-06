@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable consistent-return */
 /* eslint-disable class-methods-use-this */
 import store from './store/store';
 import { $ } from './utils/dom';
@@ -20,13 +22,9 @@ class ApiList {
         </li>`;
   }
 
-  isEmptyLocalStorage() {
-    return store.getLocalStorage() === null;
-  }
-
   createUser(users) {
     const template = users.map((user) => {
-      if (this.isEmptyLocalStorage()) {
+      if (store.isEmptyLocalStorage()) {
         return this.createUserTemplate({
           id: user.id,
           url: user.avatar_url,
@@ -34,7 +32,7 @@ class ApiList {
           bookmark: 'far',
         });
       }
-      if (!this.isEmptyLocalStorage()) {
+      if (!store.isEmptyLocalStorage()) {
         const isLocal = store.getLocalStorage().find((target) => target.login === user.login);
         if (isLocal) {
           return this.createUserTemplate({
@@ -78,11 +76,11 @@ class ApiList {
       login: userId,
     };
 
-    if (this.isEmptyLocalStorage()) {
+    if (store.isEmptyLocalStorage()) {
       store.setLocalStorage([markedUser]);
       return;
     }
-    if (!this.isEmptyLocalStorage()) {
+    if (!store.isEmptyLocalStorage()) {
       const state = store.getLocalStorage();
       store.setLocalStorage([...state, markedUser]);
     }
@@ -96,6 +94,20 @@ class ApiList {
     this.removeMark(e);
   }
 
+  toggleBookMark(e) {
+    if (!store.isEmptyLocalStorage()) {
+      const userId = e.target.closest('li').querySelector('.user-name').innerText;
+      const hasUserIdInLocalStorage = store.getLocalStorage()
+        .find((item) => item.login === userId);
+
+      if (hasUserIdInLocalStorage) {
+        this.removeLocalList(e, userId);
+        return;
+      }
+    }
+    this.addLocalList(e);
+  }
+
   clearUserTemplate() {
     if ($('#search-api-list').classList.contains('api-item')) {
       return;
@@ -106,17 +118,7 @@ class ApiList {
   initEvent() {
     $('#search-api-list').addEventListener('click', (e) => {
       if (e.target.classList.contains('bookmark-btn')) {
-        if (!this.isEmptyLocalStorage()) {
-          const userId = e.target.closest('li').querySelector('.user-name').innerText;
-          const hasUserIdInLocalStorage = store.getLocalStorage()
-            .find((item) => item.login === userId);
-
-          if (hasUserIdInLocalStorage) {
-            this.removeLocalList(e, userId);
-            return;
-          }
-        }
-        this.addLocalList(e);
+        this.toggleBookMark(e);
       }
     });
   }
