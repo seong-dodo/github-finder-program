@@ -1,6 +1,7 @@
 @import "reset.css";
 @import "searchForm.css";
 @import "apiList.css";
+@import "navTab.css";
 
 header {
   /* 헤더 레이아웃 */

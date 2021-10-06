@@ -14,6 +14,6 @@ input[type=text] {
 .input-btn {
    /* input 검색 클릭 버튼 */
   position: absolute;
-  top: 11px;
+  top: 24px;
   right: 20px;
 }

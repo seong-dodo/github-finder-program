@@ -96,6 +96,13 @@ class ApiList {
     this.removeMark(e);
   }
 
+  clearUserTemplate() {
+    if ($('#search-api-list').classList.contains('api-item')) {
+      return;
+    }
+    $('#search-api-list').innerHTML = '';
+  }
+
   initEvent() {
     $('#search-api-list').addEventListener('click', (e) => {
       if (e.target.classList.contains('bookmark-btn')) {
