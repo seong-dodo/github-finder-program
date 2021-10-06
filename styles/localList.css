@@ -1,0 +1,61 @@
+.content {
+  /* 검색 키워드 리스트 레이아웃 */
+  width: 480px;
+}
+
+.content ul {
+  clear: left;
+}
+
+.local-item {
+  /* li태그 각각의 아이템 */
+  padding: 10px 20px;
+  height: 70px;
+  border-bottom: 1px solid gray;
+}
+
+.user-img {
+  display: block;
+  float: left;
+  margin: 0 10px;
+  width: 50px;
+  height: 50px;
+  border-radius: 30px;
+}
+
+.user-name {
+  display: block;
+  float: left;
+  padding: 10px 20px;
+  width: 308px;
+  height: 50px;
+  font-size: 19px;
+  line-height: 1.7;
+}
+
+.local-item button {
+  display: block;
+  float: left;
+  margin-left: 20px;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+}
+
+.local-item i {
+  width: 40px;
+  height: 40px;
+  line-height: 1.5;
+}
+
+.non-marked {
+  /* 즐겨찾기 리스트가 없을 경우*/
+  padding: 100px 50px;
+  height: 220px;
+}
+
+.unmarked-text {
+  color: slategrey;
+  font-size: 18px;
+  text-align: center;
+}

@@ -11,8 +11,9 @@ import localList from './LocalList';
 import store from './store/store';
 
 class SearchForm {
-  constructor() {
+  constructor(keyword) {
     this.initEvent();
+    this.keyword = keyword;
   }
 
   async requestApi(keyword) {
@@ -22,6 +23,7 @@ class SearchForm {
 
   async renderList() {
     const keyword = $('#search-user').value;
+    this.keyword = keyword;
 
     if (keyword === '' || keyword === undefined) {
       alert('값을 입력해주세요.');
@@ -33,7 +35,7 @@ class SearchForm {
       apiList.createUser(users);
     }
     if (navTab.selectedTabType === '즐겨찾기') {
-      if (store.getLocalStorage() === null) {
+      if (store.getLocalStorage() === null || store.getLocalStorage().length === 0) {
         alert('즐겨찾기에 등록된 사람이 없습니다.');
       }
       if (store.getLocalStorage() !== null) {
@@ -66,5 +68,5 @@ class SearchForm {
   }
 }
 
-const searchForm = new SearchForm();
+const searchForm = new SearchForm('');
 export default searchForm;

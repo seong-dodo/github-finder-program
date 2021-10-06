@@ -1,7 +1,10 @@
+/* eslint-disable no-alert */
+/* eslint-disable import/no-cycle */
 /* eslint-disable class-methods-use-this */
 import store from './store/store';
 import { $ } from './utils/dom';
 import sortByDictionary from './utils/utils';
+import searchForm from './SearchForm';
 
 class LocalList {
   constructor() {
@@ -15,7 +18,7 @@ class LocalList {
       const filterUsers = users.filter((target) => target.login.startsWith(keyword));
       const sortFilterUsers = sortByDictionary(filterUsers, 'login');
 
-      if (filterUsers.length === 0) {
+      if (filterUsers.length === 0 || filterUsers === undefined) {
         const template = ` 
         <div class='unmarked-text'>검색한 사용자가 즐겨찾기 목록에 없습니다.</div>
         `;
@@ -25,11 +28,11 @@ class LocalList {
       }
 
       const template = sortFilterUsers.map((user, index) => `
-      <li data-key-id=${index} class="api-item">
+      <li data-key-id=${index} class="local-item">
       <img class='user-img' src=${user.avatar_url}/>
       <div class='user-name'>${user.login}</div>
-      <button class='bookmark-btn' type='button'>
-        <i class="fas fa-star fa-2x bookmark-btn"></i>
+      <button class='search-bookmark-btn ' type='button'>
+        <i class="fas fa-star fa-2x search-bookmark-btn"></i>
       </button>
       </li>
       `);
@@ -38,7 +41,7 @@ class LocalList {
   }
 
   createUser() {
-    if (store.getLocalStorage() === null) {
+    if (store.getLocalStorage() === null || store.getLocalStorage().length === 0) {
       const template = ` 
       <div class='unmarked-text'>즐겨찾기에 등록된 리스트가 없습니다.</div>
       `;
@@ -51,11 +54,11 @@ class LocalList {
       const sortUsers = sortByDictionary(users, 'login');
 
       const template = sortUsers.map((user, index) => `
-      <li data-key-id=${index} class="api-item">
+      <li data-key-id=${index} class="local-item">
       <img class='user-img' src=${user.avatar_url}/>
       <div class='user-name'>${user.login}</div>
-      <button class='bookmark-btn' type='button'>
-        <i class="fas fa-star fa-2x bookmark-btn"></i>
+      <button class='local-bookmark-btn' type='button'>
+        <i class="fas fa-star fa-2x local-bookmark-btn"></i>
       </button>
       </li>
       `);
@@ -72,7 +75,32 @@ class LocalList {
   }
 
   initEvent() {
-    //
+    $('#local-list').addEventListener('click', (e) => {
+      if (e.target.classList.contains('local-bookmark-btn')) {
+        const removeUser = e.target.closest('li').querySelector('.user-name').innerText;
+        const removeFilter = store.getLocalStorage().filter((user) => user.login !== removeUser);
+        store.setLocalStorage(removeFilter);
+        this.createUser();
+        if (store.getLocalStorage().length === 0) {
+          alert('모든 내역이 삭제되었습니다.');
+          return;
+        }
+        return;
+      }
+
+      if (e.target.classList.contains('search-bookmark-btn')) {
+        const removeUser = e.target.closest('li').querySelector('.user-name').innerText;
+        const removeFilter = store.getLocalStorage().filter((user) => user.login !== removeUser);
+        store.setLocalStorage(removeFilter);
+
+        if (store.getLocalStorage().length === 0) {
+          alert('모든 내역이 삭제되었습니다.');
+          this.createUser();
+          return;
+        }
+        this.createFilterUser(searchForm.keyword);
+      }
+    });
   }
 }
 
