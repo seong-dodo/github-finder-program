@@ -5,8 +5,10 @@
 import { $ } from './utils/dom';
 import Api from './api/api';
 
-import ApiList from './ApiList';
 import navTab from './NavTab';
+import apiList from './ApiList';
+import localList from './LocalList';
+import store from './store/store';
 
 class SearchForm {
   constructor() {
@@ -16,6 +18,27 @@ class SearchForm {
   async requestApi(keyword) {
     const { items } = await Api.getUsersBySearch(keyword);
     return items;
+  }
+
+  async renderList() {
+    const keyword = $('#search-user').value;
+
+    if (keyword === '' || keyword === undefined) {
+      alert('값을 입력해주세요.');
+      return;
+    }
+
+    if (navTab.selectedTabType === '깃허브') {
+      const users = await this.requestApi(keyword);
+      apiList.createUser(users);
+    }
+    if (navTab.selectedTabType === '즐겨찾기') {
+      if (store.getLocalStorage() === null) {
+        alert('즐겨찾기에 등록된 사람이 없습니다.');
+      }
+      localList.createUser();
+    }
+    this.clearInputValue();
   }
 
   clearInputValue() {
@@ -28,38 +51,15 @@ class SearchForm {
     });
 
     $('#search-user').addEventListener('keypress', async (e) => {
-      const keyword = e.target.value;
-
       if (e.key !== 'Enter') {
         return;
       }
-      if (keyword === '' || keyword === undefined) {
-        alert('값을 입력해주세요.');
-        return;
-      }
 
-      if (navTab.selectedTabType === '깃허브') {
-        const users = await this.requestApi(keyword);
-        ApiList.createUser(users);
-      }
-
-      this.clearInputValue();
+      this.renderList();
     });
 
     $('#search-user-submit-button').addEventListener('click', async () => {
-      const keyword = $('#search-user').value;
-
-      if (keyword === '' || keyword === undefined) {
-        alert('값을 입력해주세요.');
-        return;
-      }
-
-      if (navTab.selectedTabType === '깃허브') {
-        const users = await this.requestApi(keyword);
-        ApiList.createUser(users);
-      }
-
-      this.clearInputValue();
+      this.renderList();
     });
   }
 }
