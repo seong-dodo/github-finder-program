@@ -83,12 +83,11 @@ class LocalList {
     const removeUser = e.target.closest('li').querySelector('.user-name').innerText;
     const removeFilter = store.getLocalStorage().filter((user) => user.login !== removeUser);
     store.setLocalStorage(removeFilter);
+    this.createUser();
 
     if (store.getLocalStorage().length === 0) {
       alert('모든 내역이 삭제되었습니다.');
-      return;
     }
-    this.createUser();
   }
 
   unmarkSearchUser(e) {
